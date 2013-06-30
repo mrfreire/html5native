@@ -1,0 +1,66 @@
+<head>
+	<script src="JSBridge.js" type="text/javascript"></script>
+</head>
+
+Hello world!
+
+<script>
+
+var data = {};
+
+function initData()
+{
+	var getRandomString = function(len) {
+		var chars = "0123456789ABCDEF";
+		var s = "";
+		for (var i=0; i<len; ++i)
+		{
+			s += chars[Math.floor(Math.random()*chars.length)];
+		}
+		return s;
+	}
+	for (var i=1; i <= 64; i = i*2)
+	{
+		data[i*1024] = getRandomString(i*1024);
+	}
+}
+
+function testCallNative(bytes, tries)
+{
+	var chars = "0123456789ABCDEF";
+	
+	var t0 = new Date().getTime();
+	for (var i=0; i<tries; ++i)
+	{
+		callNative(data[bytes]);
+	}
+	var t1 = new Date().getTime();
+
+	return "Direct call from JS to native passing " + bytes + " bytes: " + (t1-t0)/tries + " ms/call on average (" + tries + " tries)";
+}
+
+function testPolling(bytes)
+{
+	return data[bytes];
+}
+
+function testPushData(str)
+{
+	return str.length;
+}
+
+function testDoNothing(data, len)
+{
+}
+
+function fibonacci(n)
+{
+	if (n < 2)
+	{
+		return n;
+	}
+	return fibonacci(n-1) + fibonacci(n-2);
+}
+
+initData();
+</script>
